@@ -31,7 +31,7 @@ while run:
     if keys[pygame.K_DOWN]:
         y += velocity
 
-    win.fill((0, 0, 0))
+    win.fill((0, 0, 0)) #erasing previous rectangle
     pygame.draw.rect(win, (255, 0, 0), [x, y, width, height])
     pygame.display.update()
 pygame.quit()
