@@ -1,7 +1,11 @@
 import pygame
 
+WIN_HEIGHT = 100
+
+WIN_WIDTH = 100
+
 pygame.init()
-win = pygame.display.set_mode((500,  500))
+win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.display.set_caption("Pygame First")
 run = True
 x = 50
@@ -20,16 +24,24 @@ while run:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT]:
-        x -= velocity
+        x = x - velocity
+        if x < 1:
+            x = 1
 
     if keys[pygame.K_RIGHT]:
-        x += velocity
+        x = x + velocity
+        if x > WIN_WIDTH - width - 1:
+            x = WIN_WIDTH - width - 1
 
     if keys[pygame.K_UP]:
-        y -= velocity
+        y = y - velocity
+        if y < 1:
+            y = 1
 
     if keys[pygame.K_DOWN]:
-        y += velocity
+        y = y + velocity
+        if y > WIN_HEIGHT - height - 1:
+            y = WIN_HEIGHT - height - 1
 
     win.fill((0, 0, 0))
     pygame.draw.rect(win, (255, 0, 0), [x, y, width, height])
