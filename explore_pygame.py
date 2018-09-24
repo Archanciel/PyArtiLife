@@ -60,7 +60,7 @@ while run:
             jumping = True
             jumpCount = 10
     else:
-        oldY = y
+        #oldY = y
         if jumpCount >= 0:
             y -= jumpCount ** 2 / 2
         elif jumpCount < 0 and jumpCount >= -10:
@@ -70,6 +70,7 @@ while run:
             jumping = False
         #print("y: {}, diff: {}".format(y, oldY - y))
         jumpCount -= 1
+        
     win.fill((0, 0, 0))
     pygame.draw.rect(win, (255, 0, 0), [x, y, width, height])
     pygame.display.update()
