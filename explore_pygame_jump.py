@@ -7,40 +7,46 @@ class Jump:
     '''
     Class managing the Shape jump behavior.
     '''
-    def __init__(self, shape, jumpCount):
+    def __init__(self, shape, func, jumpCount, divider):
         self.shape = shape
-        self.jumpCount, self.maxJump = jumpCount, -jumpCount
-        self.divider = 2
+        self.func = func
+        self.jumpCount, self.maxJump = jumpCount, jumpCount
+        self.divider = divider
         self.isJumping = False
 
     def jumpShape(self):
-        jumpHeight = self.jumpCount ** 2 / self.divider
+        jumpHeight = self.func(self.jumpCount) / self.divider
 
         if self.jumpCount >= 0:
             self.jumpCount -= 1
             self.shape.vertMove(jumpHeight)
-        elif self.jumpCount >= self.maxJump:
+            self.isJumping = True
+        elif self.jumpCount >= -self.maxJump:
             self.jumpCount -= 1
             self.shape.vertMove(-jumpHeight)
+            self.isJumping = True
         else:
             self.isJumping = False
+            self.jumpCount = self.maxJump
 
 class Shape(metaclass=ABCMeta):
     '''
     Abstract class hosting code common to all child classes.
     '''
-    def __init__(self, jump):
-        self.jump = jump
+    def __init__(self, jumpObj):
+        self.jumpObj = jumpObj
 
     def jump(self):
-        self.jump.jumpShape(self)
+        self.jumpObj.jumpShape()
 
     def isJumping(self):
-        return self.jump.isJumping
+        return self.jumpObj.isJumping
 
 class Rectangle(Shape):
     def __init__(self, x, y, width, height, velocity, surface):
-        super().__init__(Jump(self, 10))
+        def f(x):
+            return x ** 2
+        super().__init__(Jump(self, f, 10, 2))
         self.x = x
         self.y = y
         self.width = width
@@ -109,7 +115,7 @@ while run:
     if keys[pygame.K_LEFT]:
         rec.moveLeft()
 
-    if not rec.isJumping:
+    if not rec.isJumping():
         if keys[pygame.K_DOWN]:
             rec.moveDown()
 
