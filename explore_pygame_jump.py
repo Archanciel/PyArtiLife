@@ -1,7 +1,46 @@
+from abc import ABCMeta
+from abc import abstractmethod
+
 import pygame
 
-class Rectangle:
+class Jump:
+    '''
+    Class managing the Shape jump behavior.
+    '''
+    def __init__(self, shape, jumpCount):
+        self.shape = shape
+        self.jumpCount, self.maxJump = jumpCount, -jumpCount
+        self.divider = 2
+        self.isJumping = False
+
+    def jumpShape(self):
+        jumpHeight = self.jumpCount ** 2 / self.divider
+
+        if self.jumpCount >= 0:
+            self.jumpCount -= 1
+            self.shape.vertMove(jumpHeight)
+        elif self.jumpCount >= self.maxJump:
+            self.jumpCount -= 1
+            self.shape.vertMove(-jumpHeight)
+        else:
+            self.isJumping = False
+
+class Shape(metaclass=ABCMeta):
+    '''
+    Abstract class hosting code common to all child classes.
+    '''
+    def __init__(self, jump):
+        self.jump = jump
+
+    def jump(self):
+        self.jump.jumpShape(self)
+
+    def isJumping(self):
+        return self.jump.isJumping
+
+class Rectangle(Shape):
     def __init__(self, x, y, width, height, velocity, surface):
+        super().__init__(Jump(self, 10))
         self.x = x
         self.y = y
         self.width = width
@@ -20,6 +59,21 @@ class Rectangle:
 
         if self.x < 1:
             self.x = 1
+
+    def moveDown(self):
+        self.y += self.velocity
+
+        if self.y + self.height > surface.get_height() - 1:
+            self.y = surface.get_height() - self.height - 1
+
+    def moveUp(self):
+        self.y -= self.velocity
+
+        if self.y < 1:
+            self.y = 1
+            
+    def vertMove(self, height):
+        self.y -= height
 
     def draw(self):
         pygame.draw.rect(self.surface, (255, 0, 0), [self.x, self.y, self.width, self.height])
@@ -54,6 +108,18 @@ while run:
 
     if keys[pygame.K_LEFT]:
         rec.moveLeft()
+
+    if not rec.isJumping:
+        if keys[pygame.K_DOWN]:
+            rec.moveDown()
+
+        if keys[pygame.K_UP]:
+            rec.moveUp()
+    else:
+        rec.jump()
+
+    if keys[pygame.K_SPACE]:
+        rec.jump()
 
     surface.fill(S_BACKGROUND)
     rec.draw()
