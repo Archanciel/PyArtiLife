@@ -99,9 +99,11 @@ pygame.display.set_caption('Explore Pygame jump')
 clock = pygame.time.Clock()
 
 jumpObj1 = Jump(func=lambda x : x ** 3, jumpCount=8, divider=4)
-jumpObj2 = Jump(func=lambda x : x ** 2, jumpCount=10, divider=2)
 rec1 = Rectangle(x=S_WIDTH / 2, y=S_HEIGHT - 20, width=20, height=20, velocity=5, jumpO=jumpObj1, surface=surface)
+jumpObj2 = Jump(func=lambda x : x ** 2, jumpCount=10, divider=2)
 rec2 = Rectangle(x=S_WIDTH / 3, y=S_HEIGHT - 20, width=20, height=20, velocity=5, jumpO=jumpObj2, surface=surface)
+jumpObj3 = Jump(func=lambda x : x ** 3, jumpCount=10, divider=7)
+rec3 = Rectangle(x=S_WIDTH / 4, y=S_HEIGHT - 20, width=20, height=20, velocity=5, jumpO=jumpObj3, surface=surface)
 
 run = True
 
@@ -117,10 +119,12 @@ while run:
     if keys[pygame.K_RIGHT]:
         rec1.moveRight()
         rec2.moveRight()
+        rec3.moveRight()
 
     if keys[pygame.K_LEFT]:
         rec1.moveLeft()
         rec2.moveLeft()
+        rec3.moveLeft()
 
     if not rec1.isJumping():
         if keys[pygame.K_DOWN]:
@@ -140,13 +144,24 @@ while run:
     else:
         rec2.jump()
 
+    if not rec3.isJumping():
+        if keys[pygame.K_DOWN]:
+            rec3.moveDown()
+
+        if keys[pygame.K_UP]:
+            rec3.moveUp()
+    else:
+        rec3.jump()
+
     if keys[pygame.K_SPACE]:
         rec1.jump()
         rec2.jump()
+        rec3.jump()
 
     surface.fill(S_BACKGROUND)
     rec1.draw()
     rec2.draw()
+    rec3.draw()
     pygame.display.update()
     pygame.time.wait(50) #less precise than delay, but consumes less procesSing power
 
