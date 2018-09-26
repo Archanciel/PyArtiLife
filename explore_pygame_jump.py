@@ -7,23 +7,26 @@ class Jump:
     '''
     Class managing the Shape jump behavior.
     '''
-    def __init__(self, shape, func, jumpCount, divider):
-        self.shape = shape
+    def __init__(self, func, jumpCount, divider):
+        self.shape = None
         self.func = func
         self.jumpCount, self.maxJump = jumpCount, jumpCount
         self.divider = divider
         self.isJumping = False
 
+    def setShape(self, shape):
+        self.shape = shape
+
     def jumpShape(self):
         jumpHeight = self.func(self.jumpCount) / self.divider
-
+        #print("jumpHeight: {}, jumpCount: {}".format(jumpHeight, self.jumpCount))
         if self.jumpCount >= 0:
             self.jumpCount -= 1
             self.shape.vertMove(jumpHeight)
             self.isJumping = True
         elif self.jumpCount >= -self.maxJump:
             self.jumpCount -= 1
-            self.shape.vertMove(-jumpHeight)
+            self.shape.vertMove(self.func(-1) * -jumpHeight)
             self.isJumping = True
         else:
             self.isJumping = False
@@ -43,10 +46,9 @@ class Shape(metaclass=ABCMeta):
         return self.jumpObj.isJumping
 
 class Rectangle(Shape):
-    def __init__(self, x, y, width, height, velocity, surface):
-        def f(x):
-            return x ** 2
-        super().__init__(Jump(self, f, 10, 2))
+    def __init__(self, x, y, width, height, velocity, jumpO, surface):
+        jumpO.setShape(self)
+        super().__init__(jumpO)
         self.x = x
         self.y = y
         self.width = width
@@ -96,7 +98,10 @@ surface = pygame.display.set_mode((S_WIDTH, S_HEIGHT))
 pygame.display.set_caption('Explore Pygame jump')
 clock = pygame.time.Clock()
 
-rec = Rectangle(x=S_WIDTH / 2, y=S_HEIGHT / 2, width=20, height=20, velocity=5, surface=surface)
+jumpObj1 = Jump(func=lambda x : x ** 3, jumpCount=8, divider=4)
+jumpObj2 = Jump(func=lambda x : x ** 2, jumpCount=10, divider=2)
+rec1 = Rectangle(x=S_WIDTH / 2, y=S_HEIGHT - 20, width=20, height=20, velocity=5, jumpO=jumpObj1, surface=surface)
+rec2 = Rectangle(x=S_WIDTH / 3, y=S_HEIGHT - 20, width=20, height=20, velocity=5, jumpO=jumpObj2, surface=surface)
 
 run = True
 
@@ -110,25 +115,38 @@ while run:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_RIGHT]:
-        rec.moveRight()
+        rec1.moveRight()
+        rec2.moveRight()
 
     if keys[pygame.K_LEFT]:
-        rec.moveLeft()
+        rec1.moveLeft()
+        rec2.moveLeft()
 
-    if not rec.isJumping():
+    if not rec1.isJumping():
         if keys[pygame.K_DOWN]:
-            rec.moveDown()
+            rec1.moveDown()
 
         if keys[pygame.K_UP]:
-            rec.moveUp()
+            rec1.moveUp()
     else:
-        rec.jump()
+        rec1.jump()
+
+    if not rec2.isJumping():
+        if keys[pygame.K_DOWN]:
+            rec2.moveDown()
+
+        if keys[pygame.K_UP]:
+            rec2.moveUp()
+    else:
+        rec2.jump()
 
     if keys[pygame.K_SPACE]:
-        rec.jump()
+        rec1.jump()
+        rec2.jump()
 
     surface.fill(S_BACKGROUND)
-    rec.draw()
+    rec1.draw()
+    rec2.draw()
     pygame.display.update()
     pygame.time.wait(50) #less precise than delay, but consumes less procesSing power
 
