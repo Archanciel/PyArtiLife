@@ -12,6 +12,26 @@ clock = pygame.time.Clock()
 
 
 class player(object):
+    walkRight = [pygame.image.load('expl_pygame_resources/R1.png'),
+                 pygame.image.load('expl_pygame_resources/R2.png'),
+                 pygame.image.load('expl_pygame_resources/R3.png'),
+                 pygame.image.load('expl_pygame_resources/R4.png'),
+                 pygame.image.load('expl_pygame_resources/R5.png'),
+                 pygame.image.load('expl_pygame_resources/R6.png'),
+                 pygame.image.load('expl_pygame_resources/R7.png'),
+                 pygame.image.load('expl_pygame_resources/R8.png'),
+                 pygame.image.load('expl_pygame_resources/R9.png')]
+    walkLeft = [pygame.image.load('expl_pygame_resources/L1.png'),
+                pygame.image.load('expl_pygame_resources/L2.png'),
+                pygame.image.load('expl_pygame_resources/L3.png'),
+                pygame.image.load('expl_pygame_resources/L4.png'),
+                pygame.image.load('expl_pygame_resources/L5.png'),
+                pygame.image.load('expl_pygame_resources/L6.png'),
+                pygame.image.load('expl_pygame_resources/L7.png'),
+                pygame.image.load('expl_pygame_resources/L8.png'),
+                pygame.image.load('expl_pygame_resources/L9.png')]
+    characterImg = pygame.image.load('expl_pygame_resources/standing.png')
+
     def __init__(self,x,y,width,height):
         self.x = x
         self.y = y
@@ -25,40 +45,19 @@ class player(object):
         self.walkCount = 0
         self.jumpCount = 10
 
-        self.walkRight = [pygame.image.load('expl_pygame_resources/R1.png'),
-                          pygame.image.load('expl_pygame_resources/R2.png'),
-                          pygame.image.load('expl_pygame_resources/R3.png'),
-                          pygame.image.load('expl_pygame_resources/R4.png'),
-                          pygame.image.load('expl_pygame_resources/R5.png'),
-                          pygame.image.load('expl_pygame_resources/R6.png'),
-                          pygame.image.load('expl_pygame_resources/R7.png'),
-                          pygame.image.load('expl_pygame_resources/R8.png'),
-                          pygame.image.load('expl_pygame_resources/R9.png')]
-        self.walkLeft = [pygame.image.load('expl_pygame_resources/L1.png'),
-                         pygame.image.load('expl_pygame_resources/L2.png'),
-                         pygame.image.load('expl_pygame_resources/L3.png'),
-                         pygame.image.load('expl_pygame_resources/L4.png'),
-                         pygame.image.load('expl_pygame_resources/L5.png'),
-                         pygame.image.load('expl_pygame_resources/L6.png'),
-                         pygame.image.load('expl_pygame_resources/L7.png'),
-                         pygame.image.load('expl_pygame_resources/L8.png'),
-                         pygame.image.load('expl_pygame_resources/L9.png')]
-        self.characterImg = pygame.image.load('expl_pygame_resources/standing.png')
 
     def draw(self, win):
         if self.walkCount + 1 >= 27:
             self.walkCount = 0
 
         if self.left:
-            win.blit(self.walkLeft[self.walkCount//3], (self.x,self.y))
+            win.blit(player.walkLeft[self.walkCount//3], (self.x,self.y))
             self.walkCount += 1
         elif self.right:
-            win.blit(self.walkRight[self.walkCount//3], (self.x,self.y))
+            win.blit(player.walkRight[self.walkCount//3], (self.x,self.y))
             self.walkCount +=1
         else:
-            win.blit(self.characterImg, (self.x, self.y))
-
-
+            win.blit(player.characterImg, (self.x, self.y))
 
 def redrawGameWindow():
     win.blit(bg, (0,0))
