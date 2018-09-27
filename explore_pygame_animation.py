@@ -1,4 +1,6 @@
 import pygame
+
+WALK_SPEED_MULTIPLIER = 1
 pygame.init()
 
 win = pygame.display.set_mode((500,480))
@@ -16,7 +18,7 @@ x = 50
 y = 400
 width = 64
 height = 64
-vel = 5
+vel = 1 * WALK_SPEED_MULTIPLIER
 isJump = False
 jumpCount = 10
 left = False
@@ -46,7 +48,7 @@ def redrawGameWindow():
 #mainloop
 run = True
 while run:
-    clock.tick(27)
+    clock.tick(27 * WALK_SPEED_MULTIPLIER)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
