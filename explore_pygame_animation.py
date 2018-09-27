@@ -1,6 +1,6 @@
 import pygame
 
-WALK_SPEED_MULTIPLIER = 1
+WALK_SPEED_MULTIPLIER = 2
 pygame.init()
 
 win = pygame.display.set_mode((500,480))
